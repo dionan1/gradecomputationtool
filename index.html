@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Calculator</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: hsl(6, 21%, 56%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #calculator {
+            background-color: hsl(0, 0%, 100%);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            color: hsl(220, 10%, 20%);
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: hsl(7, 90%, 35%);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: hsl(120, 40%, 35%);
+        }
+
+        #results-box {
+            background-color: hsl(120, 20%, 95%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            color: hsl(220, 10%, 30%);
+        }
+
+        #eligibility {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+
+<body>
+
+<div id="calculator">
+    <h1>Grade Calculator</h1>
+
+    <h3>Please Input Prelim Grade (1-100):</h3>
+    <input type="number" id="input1" max="100" min="1" placeholder="Enter grade (1-100)" step="0.01" required> <br>
+
+    <button id="button1" py-click="computeGrades()">Calculate</button>
+
+    <div id="results-box">
+        <h3>Results:</h3>
+        <p id="gradeResults"></p>
+        <p id="deansMessage"></p>
+    </div>
+</div>
+
+<py-script>
+from pyscript import Element
+
+def computeGrades():
+    try:
+        entered_grade = float(Element("input1").element.value)
+        
+        if entered_grade < 1 or entered_grade > 100:
+            raise ValueError
+
+    except ValueError:
+        Element("gradeResults").element.innerHTML = "Invalid input! Please enter a number between 1 and 100."
+        Element("deansMessage").element.innerHTML = ""
+        return
+
+    prelim_factor = 0.2
+    midterm_factor = 0.3
+    final_factor = 0.5
+    minimum_required_grade = 75
+
+    prelim_contrib = entered_grade * prelim_factor
+    remaining_weights = midterm_factor + final_factor
+    needed_score = (minimum_required_grade - prelim_contrib) / remaining_weights
+
+    if entered_grade >= 50:
+        eligibility_info = "You are qualified for the Dean's List!"
+    else:
+        eligibility_info = "You are not qualified for the Dean's List."
+
+    final_message = f'You need a grade of {needed_score:.2f} in both the midterm and final exams to pass.'
+
+    Element("gradeResults").element.innerHTML = final_message
+    Element("deansMessage").element.innerHTML = eligibility_info
+</py-script>
+
+</body>
+</html>
