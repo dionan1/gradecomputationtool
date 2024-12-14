@@ -101,40 +101,6 @@
     </div>
 </div>
 
-<py-script>
-from pyscript import Element
-
-def computeGrades():
-    try:
-        entered_grade = float(Element("input1").element.value)
-        
-        if entered_grade < 1 or entered_grade > 100:
-            raise ValueError
-
-    except ValueError:
-        Element("gradeResults").element.innerHTML = "Invalid input! Please enter a number between 1 and 100."
-        Element("deansMessage").element.innerHTML = ""
-        return
-
-    prelim_factor = 0.2
-    midterm_factor = 0.3
-    final_factor = 0.5
-    minimum_required_grade = 75
-
-    prelim_contrib = entered_grade * prelim_factor
-    remaining_weights = midterm_factor + final_factor
-    needed_score = (minimum_required_grade - prelim_contrib) / remaining_weights
-
-    if entered_grade >= 50:
-        eligibility_info = "You are qualified for the Dean's List!"
-    else:
-        eligibility_info = "You are not qualified for the Dean's List."
-
-    final_message = f'You need a grade of {needed_score:.2f} in both the midterm and final exams to pass.'
-
-    Element("gradeResults").element.innerHTML = final_message
-    Element("deansMessage").element.innerHTML = eligibility_info
-</py-script>
 
 </body>
 </html>
